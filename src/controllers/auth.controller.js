@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import prisma from '../db/db.js';
 import { config } from '../config/config.js';
 
+// ==================== REGISTER ====================
 export async function register(req, res, next) {
   try {
     const { email, password, nombre, apellido } = req.body;
@@ -25,6 +26,7 @@ export async function register(req, res, next) {
   }
 }
 
+// ==================== LOGIN ====================
 export async function login(req, res, next) {
   try {
     const { email, password } = req.body;
@@ -55,11 +57,36 @@ export async function login(req, res, next) {
   }
 }
 
+// ==================== LOGOUT ====================
 export async function logout(req, res, next) {
   try {
     res.clearCookie('token', { httpOnly: true, sameSite: 'lax', secure: config.cookieSecure });
     res.json({ message: 'Logout correcto' });
   } catch (err) {
     next(err);
+  }
+}
+
+// ==================== ME ====================
+export async function me(req, res, next) {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ message: 'No autenticado' });
+    }
+
+    const decoded = jwt.verify(token, config.jwtSecret);
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.sub },
+      select: { id: true, email: true, nombre: true, apellido: true }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    res.json(user);
+  } catch (err) {
+    return res.status(401).json({ message: 'Token inválido' });
   }
 }
