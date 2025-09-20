@@ -10,26 +10,21 @@ import taskRoutes from './routes/tasks.routes.js';
 
 const app = express();
 
-// Middlewares base
 app.use(cors({
-  origin: config.origin,    // sólo necesario si habrá front con cookies
+  origin: config.origin,    
   credentials: true
 }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(logger);            // loguea todas las peticiones
+app.use(logger);            
 
-// Rutas
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 
-// Healthcheck
 app.get('/health', (req, res) => res.json({ ok: true }));
 
-// Errores
 app.use(errorHandler);
 
-// Arranque
 app.listen(config.port, () => {
   console.log(`API corriendo en http://localhost:${config.port}`);
 });

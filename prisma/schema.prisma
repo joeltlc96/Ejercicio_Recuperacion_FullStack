@@ -12,7 +12,7 @@ datasource db {
 model User {
   id         Int      @id @default(autoincrement())
   email      String   @unique
-  password   String   // contraseña encriptada
+  password   String   
   nombre     String
   apellido   String
   tareas     Task[]
@@ -31,5 +31,5 @@ model Task {
 
   user User @relation(fields: [userId], references: [id])
 
-  @@map("tareas") // nombre de tabla en la BD: tareas
+  @@map("tareas") 
 }

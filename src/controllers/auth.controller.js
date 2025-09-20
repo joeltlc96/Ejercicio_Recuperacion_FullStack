@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import prisma from '../db/db.js';
 import { config } from '../config/config.js';
 
-// ==================== REGISTER ====================
 export async function register(req, res, next) {
   try {
     const { email, password, nombre, apellido } = req.body;
@@ -26,7 +25,6 @@ export async function register(req, res, next) {
   }
 }
 
-// ==================== LOGIN ====================
 export async function login(req, res, next) {
   try {
     const { email, password } = req.body;
@@ -57,7 +55,6 @@ export async function login(req, res, next) {
   }
 }
 
-// ==================== LOGOUT ====================
 export async function logout(req, res, next) {
   try {
     res.clearCookie('token', { httpOnly: true, sameSite: 'lax', secure: config.cookieSecure });
@@ -67,7 +64,6 @@ export async function logout(req, res, next) {
   }
 }
 
-// ==================== ME ====================
 export async function me(req, res, next) {
   try {
     const token = req.cookies.token;
